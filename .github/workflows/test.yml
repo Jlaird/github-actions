@@ -1,0 +1,37 @@
+name: Mongodb Service Example
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+defaults:
+  run:
+    working-directory: ./mongodb
+
+jobs:
+  container-job:
+    runs-on: ubuntu-latest
+
+    # runs all of the steps inside the specified container rather than on the VM host.
+    # Because of this the network configuration changes from host based network to a container network.
+    container:
+      image:  scomm/php5.6:latest
+
+    services:
+      mongodb:
+        image: mongo
+        ports:
+        - 27017:27017
+
+    steps:
+    - uses: actions/checkout@v1
+    - run: ping mongodb
+      env:
+        # use mongodb for the host here because we have specified a container for the job.
+        # If we were running the job on the VM this would be localhost
+        MONGODB_HOST: mongodb
+        MONGODB_PORT: ${{ job.services.mongodb.ports[27017] }}
