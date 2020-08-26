@@ -19,13 +19,13 @@ jobs:
 
     services:
       mongodb:
-        image: mongo
+        image: mongo:3.4
         ports:
         - 27017:27017
 
     steps:
     - uses: actions/checkout@v1
-    - run: ping mongodb
+    - run: ping mongodb -c 1
       env:
         # use mongodb for the host here because we have specified a container for the job.
         # If we were running the job on the VM this would be localhost
